@@ -1,0 +1,63 @@
+@startuml
+
+abstract class GameCharacter {
+    String name
+    int health
+    int experiencepoints
+    int level
+
+}
+
+class Warrior extends GameCharacter {
+    int strength
+}
+
+class Wizard extends GameCharacter {
+    int intelligence
+}
+
+class Healer extends GameCharacter {
+    int wisdom
+}
+
+class Weapon {
+    String name
+    int damage
+}
+
+class Armor {
+    String name
+    int defense
+}
+
+class Sword extends Weapon {
+    int sharpness
+}
+
+class Staff extends Weapon {
+    int magic
+}
+
+class Wand extends Weapon {
+    int magic
+}
+
+class Helmet extends Armor {
+
+}
+
+class Robe extends Armor {
+
+}
+
+class Shield extends Armor {
+
+}
+
+GameCharacter "0-1" --> "0-1" Weapon
+GameCharacter "0-*" --> "0-1" Armor
+
+
+
+
+@enduml

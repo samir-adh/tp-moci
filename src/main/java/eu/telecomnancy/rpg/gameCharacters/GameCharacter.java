@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import eu.telecomnancy.rpg.armors.Armor;
+import eu.telecomnancy.rpg.events.EventManager;
+import eu.telecomnancy.rpg.events.EventType;
 import eu.telecomnancy.rpg.strategies.StrategyContext;
 import eu.telecomnancy.rpg.visitors.CharacterVisitor;
 import eu.telecomnancy.rpg.weapons.Weapon;
@@ -22,6 +24,7 @@ public abstract class GameCharacter {
     private StrategyContext context;
     private Set<Armor> equipment;
     private Weapon weapon;
+    private EventManager eventManager;
 
     public GameCharacter(String name) {
         this.name = name;
@@ -30,6 +33,7 @@ public abstract class GameCharacter {
         this.level = 1;
         this.context = new StrategyContext();
         this.equipment = new HashSet<>();
+        this.eventManager = new EventManager();
     }
 
     public abstract void accept(CharacterVisitor visitor);
@@ -46,10 +50,16 @@ public abstract class GameCharacter {
     public void takeDamage(int hpDamage) {
         hpDamage = context.damageTaken(hpDamage);
         health = Integer.max(0,health-hpDamage);
+        if (health==0) eventManager.notifyObservers(EventType.DEATH, this);
     }
 
     public void heal(int hpHeal) {
         health += hpHeal;
+    }
+
+    public void levelUp(){
+        this.level += 1;
+        eventManager.notifyObservers(EventType.LEVEL_UP,this);
     }
 
 

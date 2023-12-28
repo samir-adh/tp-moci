@@ -34,6 +34,7 @@ public class EventManager {
 
     public void notifyObservers(EventType event,GameCharacter caller){
         Set<StatusObserver> eventObservers = this.observers.get(event);
+        if (eventObservers==null) return;
         for (StatusObserver statusObserver : eventObservers) {
             statusObserver.update(event,caller);
         }

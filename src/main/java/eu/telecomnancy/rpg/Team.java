@@ -1,7 +1,8 @@
 package eu.telecomnancy.rpg;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import eu.telecomnancy.rpg.gameCharacters.GameCharacter;
 import eu.telecomnancy.rpg.visitors.CharacterVisitor;
@@ -12,57 +13,50 @@ public class Team {
     private final String name;
 
     @Getter
-    private Collection<GameCharacter> players;
+    private Map<String, GameCharacter> players;
 
     public Team(String name) {
         this.name = name;
-        players=new ArrayList<GameCharacter>();
+        players = new HashMap<>();
     }
 
     public void addPlayer(GameCharacter player) {
-        players.add(player);
+        players.put(player.getName(), player);
     }
 
     public void removePlayer(GameCharacter player) {
-        players.remove(player);
+        players.remove(player.getName());
     }
 
     public void removePlayer(String name) {
-        for (GameCharacter player : players) {
-            if (player.getName().equals(name)) {
-                players.remove(player);
-                return;
-            }
-        }
+        players.remove(name);
     }
 
     public GameCharacter getPlayer(String name) {
-        for (GameCharacter player : players) {
-            if (player.getName().equals(name)) {
-                return player;
-            }
-        }
-        return null;
+        return players.get(name);
     }
 
     public boolean containsPlayer(String name) {
-        for (GameCharacter player : players) {
-            if (player.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return players.containsKey(name);
     }
 
     public boolean containsPlayer(GameCharacter player) {
-        return players.contains(player);
+        return players.containsValue(player);
     }
 
     public int size() {
         return players.size();
     }
 
-    public void accept(CharacterVisitor visitor){
+    public void accept(CharacterVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public Collection<GameCharacter> getPlayers() {
+        return this.players.values();
+    }
+
+    public int getHealth() {
+        return this.getPlayers().stream().map(c -> c.getHealth()).reduce(0, (a, b) -> a + b);
     }
 }
